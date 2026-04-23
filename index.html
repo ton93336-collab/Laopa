@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NONIOAEY - สื่อดิจิทัล</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            min-height: 100vh;
+            background-attachment: fixed;
+            color: #4a4a4a;
+        }
+
+        /* Glassmorphism Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 9999px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .neon-text {
+            color: transparent;
+            background: linear-gradient(to right, #ec4899, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            text-shadow: 0 0 20px rgba(236,72,153,0.4);
+        }
+
+        .page-section { display: none; animation: fadeIn 0.5s; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ระบบตกแต่งรูปภาพ */
+        .editable-img-container {
+            position: relative;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.8);
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .editable-img-container:hover { transform: scale(1.05); }
+        .editable-img-container img { width: 100%; height: 160px; object-fit: cover; }
+        
+        .edit-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: none; align-items: center; justify-content: center;
+        }
+        body.admin-mode .editable-img-container:hover .edit-overlay { display: flex; }
+    </style>
+</head>
+<body class="pb-20 text-gray-800">
+
+    <nav class="sticky top-4 z-40 mx-auto max-w-4xl w-[95%] glass p-2 flex items-center justify-between">
+        <div class="flex space-x-2 overflow-x-auto w-full px-2 scrollbar-hide" id="navMenu">
+            <button onclick="switchTab('home', this)" class="glass-btn px-4 py-2 font-bold text-pink-600 bg-white/80">Home</button>
+            <button onclick="switchTab('web', this)" class="glass-btn px-4 py-2 font-semibold text-gray-600">งานเว็บ</button>
+            <button onclick="switchTab('id', this)" class="glass-btn px-4 py-2 font-semibold text-gray-600">ป้ายไอดี</button>
+            <button onclick="switchTab('assets', this)" class="glass-btn px-4 py-2 font-semibold text-gray-600">ของตกแต่ง</button>
+            <button onclick="switchTab('faq', this)" class="glass-btn px-4 py-2 font-semibold text-gray-600">FAQ</button>
+        </div>
+        <button onclick="toggleAdmin()" class="ml-2 min-w-[40px] h-10 rounded-full bg-white/50 hover:bg-white text-gray-500 flex items-center justify-center transition" id="adminBtn">
+            <i class="fas fa-lock"></i>
+        </button>
+    </nav>
+
+    <main class="max-w-4xl mx-auto mt-8 px-4">
+
+        <div id="home" class="page-section active text-center mt-20">
+            <h1 class="text-6xl md:text-8xl font-black neon-text mb-6 tracking-wider">NONIOAEY</h1>
+            <div class="glass inline-block p-6 px-10 mb-8">
+                <p class="text-xl md:text-2xl font-bold text-gray-700">รับทำป้ายขายไอดี , ทำเว็บร้าน , ปล่อยเช่ารหัส , อื่นๆ</p>
+            </div>
+            <div class="flex justify-center gap-4 flex-wrap">
+                <a href="https://www.facebook.com/share/1De6NiueGU/?mibextid=wwXIfr" target="_blank" class="glass-btn px-8 py-3 font-bold text-blue-600 text-lg">
+                    <i class="fab fa-facebook mr-2"></i> FB: Go to
+                </a>
+                <a href="https://line.me/ti/p/xnh050s5VP" target="_blank" class="glass-btn px-8 py-3 font-bold text-green-600 text-lg">
+                    <i class="fab fa-line mr-2"></i> Line: Go to
+                </a>
+            </div>
+        </div>
+
+        <div id="web" class="page-section">
+            <div class="glass p-8">
+                <h2 class="text-3xl font-bold text-pink-500 text-center mb-6">งานเว็บ</h2>
+                <p class="bg-white/40 p-4 rounded-xl text-center mb-6 font-semibold shadow-sm">
+                    รับทำเว็บไซต์ลิงค์ร้าน มีทั้งเทมเพลตให้เลือกเเละงานสั่งทำพิเศษ สามารถสอบถามได้ราคาเริ่มต้นที่ 69 บาท
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white/50 p-6 rounded-2xl border border-white shadow-sm">
+                        <h3 class="font-bold text-xl text-purple-600 mb-3"><i class="fas fa-tags mr-2"></i>เรทราคาเว็บ</h3>
+                        <ul class="space-y-2">
+                            <li>• เว็บโอนเงิน <span class="font-bold text-pink-500">69 บาท</span></li>
+                            <li>• เว็บตัวอย่างผลงาน <span class="font-bold text-pink-500">109 บาท</span></li>
+                            <li>• เว็บรายละเอียดต่างๆ <span class="font-bold text-pink-500">159 บาท</span></li>
+                            <li>• เว็บตัวอย่างผลงาน + รายละเอียด <span class="font-bold text-pink-500">209 บาท</span></li>
+                            <li class="text-sm text-gray-500 italic mt-2">* เว็บอื่นๆสามารถส่งรายละเอียดมาสอบถามราคาได้</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white/50 p-6 rounded-2xl border border-white shadow-sm">
+                        <h3 class="font-bold text-xl text-purple-600 mb-3"><i class="fas fa-info-circle mr-2"></i>ราคาบวกเพิ่มและเงื่อนไข</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li>✔️ เเก้ฟรี 1 ครั้งก่อนส่งลิงค์ (หลังส่งลิงค์เเก้จุดละ 5 บาท)</li>
+                            <li>🖼️ รูปที่ 1 - 3 ใส่ฟรี (เพิ่มรูปล่ะ 10 บาท)</li>
+                            <li>⏱️ รองาน 4 - 8 ชั่วโมง หากคิวเยอะจะเเจ้งก่อน</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="font-bold text-center text-xl mb-6 text-pink-500">ตัวอย่างผลงาน</h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
+                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="งานเว็บ">
+                            <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
+                        </div>
+                        <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center truncate">งานเว็บ 1</p>
+                        <a href="#" target="_blank" class="text-xs bg-purple-100 text-purple-700 px-4 py-1.5 rounded-full hover:bg-purple-200 transition text-center w-full">
+                            ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i>
+                        </a>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
+                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="งานเว็บ">
+                            <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
+                        </div>
+                        <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center truncate">งานเว็บ 2</p>
+                        <a href="#" target="_blank" class="text-xs bg-purple-100 text-purple-700 px-4 py-1.5 rounded-full hover:bg-purple-200 transition text-center w-full">
+                            ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="id" class="page-section">
+            <div class="glass p-8">
+                <h2 class="text-3xl font-bold text-pink-500 text-center mb-6">ป้ายไอดี</h2>
+                <p class="bg-white/40 p-4 rounded-xl text-center mb-6 font-semibold shadow-sm">รับทำป้ายขายไอดี</p>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white/50 p-6 rounded-2xl border border-white shadow-sm">
+                        <h3 class="font-bold text-xl text-purple-600 mb-3">— 𝖲𝗄𝗂𝗇 𝖱𝖺𝗍𝖾</h3>
+                        <ul class="space-y-2 mb-4">
+                            <li>• 1 - 100 สกิน ﹕สกินละ <span class="font-bold text-pink-500">0.50</span></li>
+                            <li>• 100+ สกิน ﹕สกินละ <span class="font-bold text-pink-500">1.00</span></li>
+                        </ul>
+                        <h3 class="font-bold text-xl text-purple-600 mb-3">— 𝖮𝗍𝗁𝖾𝗋𝗌</h3>
+                        <ul class="space-y-2">
+                            <li>• หัวป้าย ﹕ <span class="font-bold text-pink-500">35.-</span></li>
+                            <li>• ป้ายไฟ ﹕ <span class="font-bold text-pink-500">2.- / ชิ้น</span></li>
+                            <li>• ประดับ ﹕ <span class="font-bold text-pink-500">0.50 / ชิ้น</span></li>
+                        </ul>
+                    </div>
+                    <div class="bg-white/50 p-6 rounded-2xl border border-white shadow-sm">
+                        <h3 class="font-bold text-xl text-purple-600 mb-3">📌 กติกา</h3>
+                        <ul class="space-y-2">
+                            <li>✔️ เเก้ฟรี 1 ครั้งก่อนส่งงาน</li>
+                            <li>💸 หลังส่งงานเเก้จุดละ 5 บาท</li>
+                            <li>⏱️ รองาน 4 - 8 ชั่วโมง หากคิวเยอะจะเเจ้งก่อน</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="font-bold text-center text-xl mb-6 text-pink-500">ตัวอย่างงาน (มีลูกเล่น: คลิกที่รูปเพื่อขยายใหญ่)</h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), true)">
+                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="ป้ายไอดี">
+                            <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
+                        </div>
+                        <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">ชื่อป้ายงาน 1</p>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), true)">
+                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="ป้ายไอดี">
+                            <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
+                        </div>
+                        <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">ชื่อป้ายงาน 2</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="assets" class="page-section">
+            <div class="space-y-8">
+                
+                <div class="glass p-6">
+                    <h3 class="text-xl font-bold text-purple-600 mb-6 bg-white/60 inline-block px-5 py-2 rounded-full shadow-sm">กลุ่ม ROV</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
+                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="ROV">
+                                <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
+                            </div>
+                            <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">หัวข้อชื่องาน</p>
+                            <a href="#" target="_blank" class="text-xs bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full hover:bg-pink-200 transition text-center w-full">ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-6">
+                    <h3 class="text-xl font-bold text-purple-600 mb-6 bg-white/60 inline-block px-5 py-2 rounded-full shadow-sm">กลุ่ม Identity V</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
+                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="Identity V">
+                                <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
+                            </div>
+                            <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">หัวข้อชื่องาน</p>
+                            <a href="#" target="_blank" class="text-xs bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full hover:bg-pink-200 transition text-center w-full">ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-6">
+                    <h3 class="text-xl font-bold text-purple-600 mb-6 bg-white/60 inline-block px-5 py-2 rounded-full shadow-sm">กลุ่มฟอร์ม</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
+                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="Form">
+                                <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
+                            </div>
+                            <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">หัวข้อชื่องาน</p>
+                            <a href="#" target="_blank" class="text-xs bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full hover:bg-pink-200 transition text-center w-full">ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-6">
+                    <h3 class="text-xl font-bold text-purple-600 mb-6 bg-white/60 inline-block px-5 py-2 rounded-full shadow-sm">กลุ่มคอร์สสอนทำเว็บ</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
+                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="Course">
+                                <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
+                            </div>
+                            <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">หัวข้อชื่องาน</p>
+                            <a href="#" target="_blank" class="text-xs bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full hover:bg-pink-200 transition text-center w-full">ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="faq" class="page-section">
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <div class="glass p-8">
+                    <h2 class="text-2xl font-bold text-pink-500 mb-6">❓ ข้อสงสัย (FAQ)</h2>
+                    <div class="space-y-4">
+                        <div class="bg-white/50 p-4 rounded-xl border border-white shadow-sm">
+                            <p class="font-bold text-purple-700">Q: รองานนานไหมคะ?</p>
+                            <p class="text-sm text-gray-700 mt-1">A: ปกติรอ 4 - 8 ชั่วโมงค่ะ หากคิวเยอะจะเเจ้งก่อนนะคะ</p>
+                        </div>
+                        <div class="bg-white/50 p-4 rounded-xl border border-white shadow-sm">
+                            <p class="font-bold text-purple-700">Q: แก้งานได้กี่ครั้งคะ?</p>
+                            <p class="text-sm text-gray-700 mt-1">A: เเก้ฟรี 1 ครั้งก่อนส่งงานค่ะ หลังส่งงานเเก้จุดละ 5 บาทจ้า</p>
+                        </div>
+                        <div class="bg-white/50 p-4 rounded-xl border border-white shadow-sm">
+                            <p class="font-bold text-purple-700">Q: ถ้าจะเพิ่มรูปในเว็บคิดเงินยังไง?</p>
+                            <p class="text-sm text-gray-700 mt-1">A: รูปที่ 1 - 3 ใส่ฟรีค่ะ เพิ่มรูป รูปละ 10 บาท</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass p-8 bg-gradient-to-br from-pink-300/30 to-purple-300/30">
+                    <h2 class="text-2xl font-bold text-purple-600 mb-6">🛒 วิธีสั่งซื้อ (How to Order)</h2>
+                    <div class="space-y-4">
+                        <div class="bg-white/70 p-4 rounded-xl shadow-sm flex items-center">
+                            <div class="bg-pink-400 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">1</div>
+                            <span class="font-semibold text-gray-700">ส่งบรีฟ / รายละเอียด / โทนสีที่อยากได้</span>
+                        </div>
+                        <div class="bg-white/70 p-4 rounded-xl shadow-sm flex items-center">
+                            <div class="bg-pink-400 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">2</div>
+                            <span class="font-semibold text-gray-700">ชำระเงินตามเรทราคาเพื่อจองคิว</span>
+                        </div>
+                        <div class="bg-white/70 p-4 rounded-xl shadow-sm flex items-center">
+                            <div class="bg-pink-400 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">3</div>
+                            <span class="font-semibold text-gray-700">รอรับงานสวยๆ ได้เลย!</span>
+                        </div>
+                        <p class="text-sm text-center text-pink-600 mt-4 italic">* อื่นๆ สามารถทักมาสอบถามเพิ่มเติมได้เลยค่ะ</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <input type="file" id="imageUploader" accept="image/*" class="hidden">
+
+    <div id="lightbox" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4 backdrop-blur-md" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] rounded-2xl border-4 border-white/50 shadow-2xl">
+        <button class="absolute top-4 right-4 text-white text-5xl font-bold hover:text-pink-400 drop-shadow-md">&times;</button>
+    </div>
+
+    <script>
+        // ระบบเปลี่ยนหน้า (Tabs)
+        function switchTab(tabId, clickedBtn) {
+            // ซ่อนทุกหน้า แล้วโชว์หน้าที่เลือก
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            // เปลี่ยนสีปุ่มเมนู
+            document.querySelectorAll('#navMenu button').forEach(btn => {
+                btn.classList.remove('text-pink-600', 'bg-white/80');
+                btn.classList.add('text-gray-600');
+            });
+            clickedBtn.classList.add('text-pink-600', 'bg-white/80');
+            clickedBtn.classList.remove('text-gray-600');
+        }
+
+        // ระบบ Admin ss11
+        let isAdminMode = false;
+        function toggleAdmin() {
+            if (!isAdminMode) {
+                let pwd = prompt("🔒 ใส่รหัสผ่าน Admin (เพื่อเปิดโหมดเปลี่ยนรูปภาพ):");
+                if (pwd === "ss11") {
+                    isAdminMode = true;
+                    document.body.classList.add('admin-mode');
+                    document.getElementById('adminBtn').classList.replace('text-gray-500', 'text-pink-500');
+                    document.getElementById('adminBtn').innerHTML = '<i class="fas fa-unlock"></i>';
+                    alert("✅ ปลดล็อคสำเร็จ! นำเมาส์ไปชี้ที่รูปภาพบนเว็บ แล้วกดถ่ายรูปเพื่ออัปโหลดเปลี่ยนรูปได้เลย");
+                } else if (pwd !== null) {
+                    alert("❌ รหัสผ่านผิด");
+                }
+            } else {
+                isAdminMode = false;
+                document.body.classList.remove('admin-mode');
+                document.getElementById('adminBtn').classList.replace('text-pink-500', 'text-gray-500');
+                document.getElementById('adminBtn').innerHTML = '<i class="fas fa-lock"></i>';
+                alert("🔒 ปิดโหมดแก้ไขรูปภาพแล้ว");
+            }
+        }
+
+        // ระบบอัปโหลดรูป / ขยายรูป
+        let currentTargetImage = null;
+        const uploader = document.getElementById('imageUploader');
+
+        function handleImageClick(imgElement, isLightboxable) {
+            if (isAdminMode) {
+                currentTargetImage = imgElement;
+                uploader.click(); 
+            } else if (isLightboxable) {
+                // ถ้าไม่ใช่ Admin และรูปนี้ตั้งค่าให้เด้งได้ (เช่นป้ายไอดี)
+                document.getElementById('lightbox-img').src = imgElement.src;
+                document.getElementById('lightbox').classList.replace('hidden', 'flex');
+            }
+        }
+
+        uploader.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && currentTargetImage) {
+                currentTargetImage.src = URL.createObjectURL(file);
+            }
+            uploader.value = ''; 
+        });
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.replace('flex', 'hidden');
+        }
+    </script>
+</body>
+</html>
