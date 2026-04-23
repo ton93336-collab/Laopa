@@ -4,396 +4,328 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NONIOAEY - สื่อดิจิทัล</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap');
         
+        /* === รีเซ็ตค่าเริ่มต้น === */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
             font-family: 'Kanit', sans-serif;
-            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
-            min-height: 100vh;
+            /* พื้นหลังสี Y2K พาสเทลหวานๆ */
+            background: radial-gradient(circle at top left, #ffe5ec, #e0c3fc, #ffc3a0);
             background-attachment: fixed;
             color: #4a4a4a;
+            min-height: 100vh;
+            padding-bottom: 50px;
         }
 
-        /* Glassmorphism Effect */
-        .glass {
+        /* === ระบบโครงสร้างหลัก === */
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        .text-center { text-align: center; }
+        .mt-5 { margin-top: 50px; } .mb-3 { margin-bottom: 20px; }
+
+        /* === เอฟเฟกต์ Glassmorphism (กระจกใส) === */
+        .glass-panel {
             background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            border-radius: 2rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(255, 150, 200, 0.15);
+            margin-bottom: 30px;
         }
 
-        .glass-btn {
+        /* === ป้ายราคา (การ์ดย่อย) === */
+        .price-card {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* === แถบเมนูด้านบน === */
+        .navbar {
+            position: sticky; top: 15px; z-index: 100;
             background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 9999px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
+            border: 2px solid white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 800px; margin: 15px auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
-        .glass-btn:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: translateY(-2px);
-        }
-
-        .neon-text {
-            color: transparent;
-            background: linear-gradient(to right, #ec4899, #8b5cf6, #ec4899);
-            -webkit-background-clip: text;
-            text-shadow: 0 0 20px rgba(236,72,153,0.4);
-        }
-
-        .page-section { display: none; animation: fadeIn 0.5s; }
-        .page-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ระบบตกแต่งรูปภาพ */
-        .editable-img-container {
-            position: relative;
-            border-radius: 1rem;
-            overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.8);
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        .editable-img-container:hover { transform: scale(1.05); }
-        .editable-img-container img { width: 100%; height: 160px; object-fit: cover; }
+        .nav-links { display: flex; gap: 10px; overflow-x: auto; }
         
-        .edit-overlay {
-            position: absolute; inset: 0;
-            background: rgba(0,0,0,0.4);
-            display: none; align-items: center; justify-content: center;
+        /* === ปุ่มต่างๆ === */
+        .btn {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-family: inherit; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; color: #666; font-size: 16px;
+            text-decoration: none; display: inline-block;
         }
-        body.admin-mode .editable-img-container:hover .edit-overlay { display: flex; }
+        .btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,100,150,0.2); }
+        .btn.active { background: linear-gradient(135deg, #ff9a9e, #fecfef); color: #c2185b; border-color: transparent; }
+        
+        /* ปุ่มโซเชียล */
+        .btn-fb { color: #1877F2; font-size: 18px; padding: 15px 30px; }
+        .btn-line { color: #00B900; font-size: 18px; padding: 15px 30px; }
+        .btn-admin { border-radius: 50%; width: 45px; height: 45px; padding: 0; display: flex; align-items: center; justify-content: center; }
+
+        /* === ข้อความ Y2K === */
+        .title-neon {
+            font-size: 5rem; font-weight: 800;
+            background: linear-gradient(to right, #ff758c, #ff7eb3, #c2e9fb);
+            -webkit-background-clip: text; color: transparent;
+            text-shadow: 3px 3px 10px rgba(255, 117, 140, 0.3);
+            margin-bottom: 20px;
+        }
+        .text-pink { color: #d81b60; }
+        .text-purple { color: #8e24aa; }
+
+        /* === ระบบเปลี่ยนหน้า (Tabs) === */
+        .page-section { display: none; animation: slideUp 0.5s ease; }
+        .page-section.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* === จัด Layout แบบ Grid === */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        /* === ระบบรูปภาพและ Admin === */
+        .portfolio-item { text-align: center; }
+        .img-box {
+            position: relative; border-radius: 20px; overflow: hidden;
+            border: 3px solid white; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s;
+            aspect-ratio: 4/3; background: #fff;
+        }
+        .img-box:hover { transform: scale(1.03); }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .edit-layer {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+            display: none; align-items: center; justify-content: center;
+            color: white; font-size: 30px;
+        }
+        body.admin-mode .img-box:hover .edit-layer { display: flex; }
+        
+        .item-title { background: rgba(255,255,255,0.7); padding: 5px 15px; border-radius: 50px; font-weight: 600; font-size: 14px; margin: 10px 0; display: inline-block; }
+        .btn-sm { font-size: 12px; padding: 5px 15px; background: #f3e8ff; color: #7e22ce; }
+
+        /* === Lightbox (ขยายรูป) === */
+        .lightbox-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000;
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+        }
+        .lightbox-content { max-width: 90%; max-height: 90vh; border-radius: 20px; border: 5px solid white; }
+        .close-btn { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
-<body class="pb-20 text-gray-800">
+<body>
 
-    <nav class="sticky top-4 z-40 mx-auto max-w-4xl w-[95%] glass p-2 flex items-center justify-between">
-        <div class="flex space-x-2 overflow-x-auto w-full px-2 scrollbar-hide" id="navMenu">
-            <button onclick="switchTab('home', this)" class="glass-btn px-4 py-2 font-bold text-pink-600 bg-white/80">Home</button>
-            <button onclick="switchTab('web', this)" class="glass-btn px-4 py-2 font-semibold text-gray-600">งานเว็บ</button>
-            <button onclick="switchTab('id', this)" class="glass-btn px-4 py-2 font-semibold text-gray-600">ป้ายไอดี</button>
-            <button onclick="switchTab('assets', this)" class="glass-btn px-4 py-2 font-semibold text-gray-600">ของตกแต่ง</button>
-            <button onclick="switchTab('faq', this)" class="glass-btn px-4 py-2 font-semibold text-gray-600">FAQ</button>
+    <nav class="navbar">
+        <div class="nav-links" id="navMenu">
+            <button class="btn active" onclick="switchTab('home', this)">Home</button>
+            <button class="btn" onclick="switchTab('web', this)">งานเว็บ</button>
+            <button class="btn" onclick="switchTab('id', this)">ป้ายไอดี</button>
+            <button class="btn" onclick="switchTab('assets', this)">ของตกแต่ง</button>
+            <button class="btn" onclick="switchTab('faq', this)">FAQ</button>
         </div>
-        <button onclick="toggleAdmin()" class="ml-2 min-w-[40px] h-10 rounded-full bg-white/50 hover:bg-white text-gray-500 flex items-center justify-center transition" id="adminBtn">
-            <i class="fas fa-lock"></i>
-        </button>
+        <button class="btn btn-admin" onclick="toggleAdmin()" id="adminBtn"><i class="fas fa-lock"></i></button>
     </nav>
 
-    <main class="max-w-4xl mx-auto mt-8 px-4">
+    <div class="container mt-5">
 
-        <div id="home" class="page-section active text-center mt-20">
-            <h1 class="text-6xl md:text-8xl font-black neon-text mb-6 tracking-wider">NONIOAEY</h1>
-            <div class="glass inline-block p-6 px-10 mb-8">
-                <p class="text-xl md:text-2xl font-bold text-gray-700">รับทำป้ายขายไอดี , ทำเว็บร้าน , ปล่อยเช่ารหัส , อื่นๆ</p>
+        <div id="home" class="page-section active text-center">
+            <h1 class="title-neon">NONIOAEY</h1>
+            <div class="glass-panel" style="display: inline-block;">
+                <h2>รับทำป้ายขายไอดี , ทำเว็บร้าน , ปล่อยเช่ารหัส , อื่นๆ</h2>
             </div>
-            <div class="flex justify-center gap-4 flex-wrap">
-                <a href="https://www.facebook.com/share/1De6NiueGU/?mibextid=wwXIfr" target="_blank" class="glass-btn px-8 py-3 font-bold text-blue-600 text-lg">
-                    <i class="fab fa-facebook mr-2"></i> FB: Go to
-                </a>
-                <a href="https://line.me/ti/p/xnh050s5VP" target="_blank" class="glass-btn px-8 py-3 font-bold text-green-600 text-lg">
-                    <i class="fab fa-line mr-2"></i> Line: Go to
-                </a>
+            <div class="mt-5" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="https://www.facebook.com/share/1De6NiueGU/?mibextid=wwXIfr" target="_blank" class="btn btn-fb"><i class="fab fa-facebook"></i> FB: Go to</a>
+                <a href="https://line.me/ti/p/xnh050s5VP" target="_blank" class="btn btn-line"><i class="fab fa-line"></i> Line: Go to</a>
             </div>
         </div>
 
         <div id="web" class="page-section">
-            <div class="glass p-8">
-                <h2 class="text-3xl font-bold text-pink-500 text-center mb-6">งานเว็บ</h2>
-                <p class="bg-white/40 p-4 rounded-xl text-center mb-6 font-semibold shadow-sm">
-                    รับทำเว็บไซต์ลิงค์ร้าน มีทั้งเทมเพลตให้เลือกเเละงานสั่งทำพิเศษ สามารถสอบถามได้ราคาเริ่มต้นที่ 69 บาท
-                </p>
+            <div class="glass-panel">
+                <h2 class="text-pink text-center mb-3">งานเว็บ</h2>
+                <div class="price-card text-center mb-3">
+                    <p>รับทำเว็บไซต์ลิงค์ร้าน มีทั้งเทมเพลตให้เลือกเเละงานสั่งทำพิเศษ เริ่มต้น 69 บาท</p>
+                </div>
                 
-                <div class="grid md:grid-cols-2 gap-6 mb-8">
-                    <div class="bg-white/50 p-6 rounded-2xl border border-white shadow-sm">
-                        <h3 class="font-bold text-xl text-purple-600 mb-3"><i class="fas fa-tags mr-2"></i>เรทราคาเว็บ</h3>
-                        <ul class="space-y-2">
-                            <li>• เว็บโอนเงิน <span class="font-bold text-pink-500">69 บาท</span></li>
-                            <li>• เว็บตัวอย่างผลงาน <span class="font-bold text-pink-500">109 บาท</span></li>
-                            <li>• เว็บรายละเอียดต่างๆ <span class="font-bold text-pink-500">159 บาท</span></li>
-                            <li>• เว็บตัวอย่างผลงาน + รายละเอียด <span class="font-bold text-pink-500">209 บาท</span></li>
-                            <li class="text-sm text-gray-500 italic mt-2">* เว็บอื่นๆสามารถส่งรายละเอียดมาสอบถามราคาได้</li>
-                        </ul>
+                <div class="grid-2 mb-3">
+                    <div class="price-card">
+                        <h3 class="text-purple mb-3"><i class="fas fa-money-bill-wave"></i> เรทราคาเว็บ</h3>
+                        <p>• เว็บโอนเงิน <b class="text-pink">69 บาท</b></p>
+                        <p>• เว็บตัวอย่างผลงาน <b class="text-pink">109 บาท</b></p>
+                        <p>• เว็บรายละเอียดต่างๆ <b class="text-pink">159 บาท</b></p>
+                        <p>• เว็บตัวอย่าง + รายละเอียด <b class="text-pink">209 บาท</b></p>
                     </div>
-                    <div class="bg-white/50 p-6 rounded-2xl border border-white shadow-sm">
-                        <h3 class="font-bold text-xl text-purple-600 mb-3"><i class="fas fa-info-circle mr-2"></i>ราคาบวกเพิ่มและเงื่อนไข</h3>
-                        <ul class="space-y-2 text-sm">
-                            <li>✔️ เเก้ฟรี 1 ครั้งก่อนส่งลิงค์ (หลังส่งลิงค์เเก้จุดละ 5 บาท)</li>
-                            <li>🖼️ รูปที่ 1 - 3 ใส่ฟรี (เพิ่มรูปล่ะ 10 บาท)</li>
-                            <li>⏱️ รองาน 4 - 8 ชั่วโมง หากคิวเยอะจะเเจ้งก่อน</li>
-                        </ul>
+                    <div class="price-card">
+                        <h3 class="text-purple mb-3"><i class="fas fa-info-circle"></i> กติกา</h3>
+                        <p>✔️ เเก้ฟรี 1 ครั้งก่อนส่งลิงค์ (หลังส่งเเก้จุดละ 5 บาท)</p>
+                        <p>🖼️ รูปที่ 1-3 ใส่ฟรี (เพิ่มรูปล่ะ 10 บาท)</p>
+                        <p>⏱️ รองาน 4-8 ชั่วโมง</p>
                     </div>
                 </div>
 
-                <h3 class="font-bold text-center text-xl mb-6 text-pink-500">ตัวอย่างผลงาน</h3>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    
-                    <div class="flex flex-col items-center gap-2">
-                        <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
-                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="งานเว็บ">
-                            <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
-                        </div>
-                        <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center truncate">งานเว็บ 1</p>
-                        <a href="#" target="_blank" class="text-xs bg-purple-100 text-purple-700 px-4 py-1.5 rounded-full hover:bg-purple-200 transition text-center w-full">
-                            ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i>
-                        </a>
+                <h3 class="text-center text-pink mb-3">ตัวอย่างผลงาน</h3>
+                <div class="grid-4" id="web-portfolio">
                     </div>
-
-                    <div class="flex flex-col items-center gap-2">
-                        <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
-                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="งานเว็บ">
-                            <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
-                        </div>
-                        <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center truncate">งานเว็บ 2</p>
-                        <a href="#" target="_blank" class="text-xs bg-purple-100 text-purple-700 px-4 py-1.5 rounded-full hover:bg-purple-200 transition text-center w-full">
-                            ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i>
-                        </a>
-                    </div>
-
-                </div>
             </div>
         </div>
 
         <div id="id" class="page-section">
-            <div class="glass p-8">
-                <h2 class="text-3xl font-bold text-pink-500 text-center mb-6">ป้ายไอดี</h2>
-                <p class="bg-white/40 p-4 rounded-xl text-center mb-6 font-semibold shadow-sm">รับทำป้ายขายไอดี</p>
-
-                <div class="grid md:grid-cols-2 gap-6 mb-8">
-                    <div class="bg-white/50 p-6 rounded-2xl border border-white shadow-sm">
-                        <h3 class="font-bold text-xl text-purple-600 mb-3">— 𝖲𝗄𝗂𝗇 𝖱𝖺𝗍𝖾</h3>
-                        <ul class="space-y-2 mb-4">
-                            <li>• 1 - 100 สกิน ﹕สกินละ <span class="font-bold text-pink-500">0.50</span></li>
-                            <li>• 100+ สกิน ﹕สกินละ <span class="font-bold text-pink-500">1.00</span></li>
-                        </ul>
-                        <h3 class="font-bold text-xl text-purple-600 mb-3">— 𝖮𝗍𝗁𝖾𝗋𝗌</h3>
-                        <ul class="space-y-2">
-                            <li>• หัวป้าย ﹕ <span class="font-bold text-pink-500">35.-</span></li>
-                            <li>• ป้ายไฟ ﹕ <span class="font-bold text-pink-500">2.- / ชิ้น</span></li>
-                            <li>• ประดับ ﹕ <span class="font-bold text-pink-500">0.50 / ชิ้น</span></li>
-                        </ul>
-                    </div>
-                    <div class="bg-white/50 p-6 rounded-2xl border border-white shadow-sm">
-                        <h3 class="font-bold text-xl text-purple-600 mb-3">📌 กติกา</h3>
-                        <ul class="space-y-2">
-                            <li>✔️ เเก้ฟรี 1 ครั้งก่อนส่งงาน</li>
-                            <li>💸 หลังส่งงานเเก้จุดละ 5 บาท</li>
-                            <li>⏱️ รองาน 4 - 8 ชั่วโมง หากคิวเยอะจะเเจ้งก่อน</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <h3 class="font-bold text-center text-xl mb-6 text-pink-500">ตัวอย่างงาน (มีลูกเล่น: คลิกที่รูปเพื่อขยายใหญ่)</h3>
+            <div class="glass-panel">
+                <h2 class="text-pink text-center mb-3">ป้ายไอดี</h2>
                 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    
-                    <div class="flex flex-col items-center gap-2">
-                        <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), true)">
-                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="ป้ายไอดี">
-                            <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
-                        </div>
-                        <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">ชื่อป้ายงาน 1</p>
+                <div class="grid-2 mb-3">
+                    <div class="price-card">
+                        <h3 class="text-purple mb-3">💎 Skin Rate</h3>
+                        <p>• 1 - 100 สกิน : <b class="text-pink">0.50 / สกิน</b></p>
+                        <p>• 100+ สกิน : <b class="text-pink">1.00 / สกิน</b></p>
+                        <h3 class="text-purple mb-3 mt-5">✨ Others</h3>
+                        <p>หัวป้าย: <b class="text-pink">35.-</b> | ป้ายไฟ: <b class="text-pink">2.-</b> | ประดับ: <b class="text-pink">0.50</b></p>
                     </div>
-
-                    <div class="flex flex-col items-center gap-2">
-                        <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), true)">
-                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="ป้ายไอดี">
-                            <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
-                        </div>
-                        <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">ชื่อป้ายงาน 2</p>
+                    <div class="price-card">
+                        <h3 class="text-purple mb-3">📌 กติกา</h3>
+                        <p>✔️ เเก้ฟรี 1 ครั้งก่อนส่งงาน</p>
+                        <p>💸 หลังส่งงานเเก้จุดละ 5 บาท</p>
+                        <p>⏱️ รองาน 4 - 8 ชั่วโมง</p>
                     </div>
-
                 </div>
+
+                <h3 class="text-center text-pink mb-3">คลิกที่รูปเพื่อขยายใหญ่</h3>
+                <div class="grid-4" id="id-portfolio"></div>
             </div>
         </div>
 
         <div id="assets" class="page-section">
-            <div class="space-y-8">
-                
-                <div class="glass p-6">
-                    <h3 class="text-xl font-bold text-purple-600 mb-6 bg-white/60 inline-block px-5 py-2 rounded-full shadow-sm">กลุ่ม ROV</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div class="flex flex-col items-center gap-2">
-                            <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
-                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="ROV">
-                                <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
-                            </div>
-                            <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">หัวข้อชื่องาน</p>
-                            <a href="#" target="_blank" class="text-xs bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full hover:bg-pink-200 transition text-center w-full">ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass p-6">
-                    <h3 class="text-xl font-bold text-purple-600 mb-6 bg-white/60 inline-block px-5 py-2 rounded-full shadow-sm">กลุ่ม Identity V</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div class="flex flex-col items-center gap-2">
-                            <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
-                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="Identity V">
-                                <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
-                            </div>
-                            <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">หัวข้อชื่องาน</p>
-                            <a href="#" target="_blank" class="text-xs bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full hover:bg-pink-200 transition text-center w-full">ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass p-6">
-                    <h3 class="text-xl font-bold text-purple-600 mb-6 bg-white/60 inline-block px-5 py-2 rounded-full shadow-sm">กลุ่มฟอร์ม</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div class="flex flex-col items-center gap-2">
-                            <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
-                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="Form">
-                                <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
-                            </div>
-                            <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">หัวข้อชื่องาน</p>
-                            <a href="#" target="_blank" class="text-xs bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full hover:bg-pink-200 transition text-center w-full">ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass p-6">
-                    <h3 class="text-xl font-bold text-purple-600 mb-6 bg-white/60 inline-block px-5 py-2 rounded-full shadow-sm">กลุ่มคอร์สสอนทำเว็บ</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div class="flex flex-col items-center gap-2">
-                            <div class="editable-img-container w-full" onclick="handleImageClick(this.querySelector('img'), false)">
-                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80" alt="Course">
-                                <div class="edit-overlay text-white text-3xl"><i class="fas fa-camera"></i></div>
-                            </div>
-                            <p class="font-bold text-sm bg-white/50 px-3 py-1 rounded-full w-full text-center">หัวข้อชื่องาน</p>
-                            <a href="#" target="_blank" class="text-xs bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full hover:bg-pink-200 transition text-center w-full">ดูตัวอย่าง <i class="fas fa-external-link-alt ml-1"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <div id="assets-container"></div>
         </div>
 
         <div id="faq" class="page-section">
-            <div class="grid md:grid-cols-2 gap-8">
-                
-                <div class="glass p-8">
-                    <h2 class="text-2xl font-bold text-pink-500 mb-6">❓ ข้อสงสัย (FAQ)</h2>
-                    <div class="space-y-4">
-                        <div class="bg-white/50 p-4 rounded-xl border border-white shadow-sm">
-                            <p class="font-bold text-purple-700">Q: รองานนานไหมคะ?</p>
-                            <p class="text-sm text-gray-700 mt-1">A: ปกติรอ 4 - 8 ชั่วโมงค่ะ หากคิวเยอะจะเเจ้งก่อนนะคะ</p>
-                        </div>
-                        <div class="bg-white/50 p-4 rounded-xl border border-white shadow-sm">
-                            <p class="font-bold text-purple-700">Q: แก้งานได้กี่ครั้งคะ?</p>
-                            <p class="text-sm text-gray-700 mt-1">A: เเก้ฟรี 1 ครั้งก่อนส่งงานค่ะ หลังส่งงานเเก้จุดละ 5 บาทจ้า</p>
-                        </div>
-                        <div class="bg-white/50 p-4 rounded-xl border border-white shadow-sm">
-                            <p class="font-bold text-purple-700">Q: ถ้าจะเพิ่มรูปในเว็บคิดเงินยังไง?</p>
-                            <p class="text-sm text-gray-700 mt-1">A: รูปที่ 1 - 3 ใส่ฟรีค่ะ เพิ่มรูป รูปละ 10 บาท</p>
-                        </div>
+            <div class="grid-2">
+                <div class="glass-panel">
+                    <h2 class="text-pink mb-3">❓ ข้อสงสัย (FAQ)</h2>
+                    <div class="price-card mb-3">
+                        <b class="text-purple">Q: รองานนานไหมคะ?</b>
+                        <p>A: ปกติรอ 4-8 ชั่วโมงค่ะ</p>
+                    </div>
+                    <div class="price-card">
+                        <b class="text-purple">Q: แก้งานได้กี่ครั้ง?</b>
+                        <p>A: ฟรี 1 ครั้งแรกจ้า ต่อไปจุดละ 5 บาท</p>
                     </div>
                 </div>
-                
-                <div class="glass p-8 bg-gradient-to-br from-pink-300/30 to-purple-300/30">
-                    <h2 class="text-2xl font-bold text-purple-600 mb-6">🛒 วิธีสั่งซื้อ (How to Order)</h2>
-                    <div class="space-y-4">
-                        <div class="bg-white/70 p-4 rounded-xl shadow-sm flex items-center">
-                            <div class="bg-pink-400 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">1</div>
-                            <span class="font-semibold text-gray-700">ส่งบรีฟ / รายละเอียด / โทนสีที่อยากได้</span>
-                        </div>
-                        <div class="bg-white/70 p-4 rounded-xl shadow-sm flex items-center">
-                            <div class="bg-pink-400 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">2</div>
-                            <span class="font-semibold text-gray-700">ชำระเงินตามเรทราคาเพื่อจองคิว</span>
-                        </div>
-                        <div class="bg-white/70 p-4 rounded-xl shadow-sm flex items-center">
-                            <div class="bg-pink-400 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">3</div>
-                            <span class="font-semibold text-gray-700">รอรับงานสวยๆ ได้เลย!</span>
-                        </div>
-                        <p class="text-sm text-center text-pink-600 mt-4 italic">* อื่นๆ สามารถทักมาสอบถามเพิ่มเติมได้เลยค่ะ</p>
-                    </div>
+                <div class="glass-panel">
+                    <h2 class="text-purple mb-3">🛒 วิธีสั่งซื้อ</h2>
+                    <div class="price-card mb-3"><b>1.</b> ส่งบรีฟ / รูปเรฟที่อยากได้</div>
+                    <div class="price-card mb-3"><b>2.</b> ประเมินราคาและโอนเงิน</div>
+                    <div class="price-card"><b>3.</b> รอรับงานสวยๆ จ้า!</div>
                 </div>
-
             </div>
         </div>
 
-    </main>
+    </div>
 
-    <input type="file" id="imageUploader" accept="image/*" class="hidden">
+    <input type="file" id="imageUploader" accept="image/*" style="display: none;">
 
-    <div id="lightbox" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4 backdrop-blur-md" onclick="closeLightbox()">
-        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] rounded-2xl border-4 border-white/50 shadow-2xl">
-        <button class="absolute top-4 right-4 text-white text-5xl font-bold hover:text-pink-400 drop-shadow-md">&times;</button>
+    <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+        <span class="close-btn">&times;</span>
+        <img id="lightbox-img" class="lightbox-content" src="">
     </div>
 
     <script>
-        // ระบบเปลี่ยนหน้า (Tabs)
-        function switchTab(tabId, clickedBtn) {
-            // ซ่อนทุกหน้า แล้วโชว์หน้าที่เลือก
+        // 1. ระบบเปลี่ยนหน้า
+        function switchTab(tabId, btn) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             
-            // เปลี่ยนสีปุ่มเมนู
-            document.querySelectorAll('#navMenu button').forEach(btn => {
-                btn.classList.remove('text-pink-600', 'bg-white/80');
-                btn.classList.add('text-gray-600');
-            });
-            clickedBtn.classList.add('text-pink-600', 'bg-white/80');
-            clickedBtn.classList.remove('text-gray-600');
+            document.querySelectorAll('#navMenu .btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
 
-        // ระบบ Admin ss11
+        // 2. ระบบ Admin
         let isAdminMode = false;
         function toggleAdmin() {
             if (!isAdminMode) {
-                let pwd = prompt("🔒 ใส่รหัสผ่าน Admin (เพื่อเปิดโหมดเปลี่ยนรูปภาพ):");
+                let pwd = prompt("ใส่รหัสผ่านเพื่อเปิดโหมดเปลี่ยนรูป:");
                 if (pwd === "ss11") {
                     isAdminMode = true;
                     document.body.classList.add('admin-mode');
-                    document.getElementById('adminBtn').classList.replace('text-gray-500', 'text-pink-500');
+                    document.getElementById('adminBtn').style.color = '#d81b60';
                     document.getElementById('adminBtn').innerHTML = '<i class="fas fa-unlock"></i>';
-                    alert("✅ ปลดล็อคสำเร็จ! นำเมาส์ไปชี้ที่รูปภาพบนเว็บ แล้วกดถ่ายรูปเพื่ออัปโหลดเปลี่ยนรูปได้เลย");
-                } else if (pwd !== null) {
-                    alert("❌ รหัสผ่านผิด");
-                }
+                    alert("✅ ปลดล็อคโหมด Admin แล้ว! คลิกที่รูปภาพเพื่อเปลี่ยนรูปได้เลย");
+                } else if (pwd) alert("❌ รหัสผิด!");
             } else {
                 isAdminMode = false;
                 document.body.classList.remove('admin-mode');
-                document.getElementById('adminBtn').classList.replace('text-pink-500', 'text-gray-500');
+                document.getElementById('adminBtn').style.color = '#666';
                 document.getElementById('adminBtn').innerHTML = '<i class="fas fa-lock"></i>';
-                alert("🔒 ปิดโหมดแก้ไขรูปภาพแล้ว");
             }
         }
 
-        // ระบบอัปโหลดรูป / ขยายรูป
-        let currentTargetImage = null;
+        // 3. จัดการรูปภาพ
+        let currentImg = null;
         const uploader = document.getElementById('imageUploader');
 
-        function handleImageClick(imgElement, isLightboxable) {
+        function handleImageClick(img, canExpand) {
             if (isAdminMode) {
-                currentTargetImage = imgElement;
-                uploader.click(); 
-            } else if (isLightboxable) {
-                // ถ้าไม่ใช่ Admin และรูปนี้ตั้งค่าให้เด้งได้ (เช่นป้ายไอดี)
-                document.getElementById('lightbox-img').src = imgElement.src;
-                document.getElementById('lightbox').classList.replace('hidden', 'flex');
+                currentImg = img;
+                uploader.click();
+            } else if (canExpand) {
+                document.getElementById('lightbox-img').src = img.src;
+                document.getElementById('lightbox').style.display = 'flex';
             }
         }
 
         uploader.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file && currentTargetImage) {
-                currentTargetImage.src = URL.createObjectURL(file);
+            if (e.target.files[0] && currentImg) {
+                currentImg.src = URL.createObjectURL(e.target.files[0]);
             }
-            uploader.value = ''; 
         });
 
         function closeLightbox() {
-            document.getElementById('lightbox').classList.replace('flex', 'hidden');
+            document.getElementById('lightbox').style.display = 'none';
         }
+
+        // 4. สร้างการ์ดรูปภาพแบบไวๆ
+        const placeholderImg = 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=400&q=80';
+        
+        function makeCard(title, isIdBanner) {
+            let linkBtn = isIdBanner ? '' : `<a href="#" class="btn btn-sm">ดูตัวอย่าง <i class="fas fa-external-link-alt"></i></a>`;
+            return `
+                <div class="portfolio-item">
+                    <div class="img-box" onclick="handleImageClick(this.querySelector('img'), ${isIdBanner})">
+                        <img src="${placeholderImg}" alt="งาน">
+                        <div class="edit-layer"><i class="fas fa-camera"></i></div>
+                    </div>
+                    <span class="item-title">${title}</span><br>
+                    ${linkBtn}
+                </div>
+            `;
+        }
+
+        document.getElementById('web-portfolio').innerHTML = Array(4).fill(0).map((_, i) => makeCard('งานเว็บ '+(i+1), false)).join('');
+        document.getElementById('id-portfolio').innerHTML = Array(4).fill(0).map((_, i) => makeCard('งานป้าย '+(i+1), true)).join('');
+
+        const groups = ['กลุ่ม ROV', 'กลุ่ม Identity V', 'กลุ่มฟอร์ม', 'กลุ่มคอร์ส'];
+        document.getElementById('assets-container').innerHTML = groups.map(g => `
+            <div class="glass-panel">
+                <h3 class="text-purple mb-3" style="background: rgba(255,255,255,0.8); padding: 5px 20px; border-radius: 50px; display: inline-block;">${g}</h3>
+                <div class="grid-4">${Array(4).fill(0).map((_, i) => makeCard('ตัวอย่าง '+(i+1), false)).join('')}</div>
+            </div>
+        `).join('');
     </script>
 </body>
 </html>
